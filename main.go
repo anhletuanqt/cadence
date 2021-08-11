@@ -26,12 +26,15 @@ func main() {
 		TaskList:                     order_workflow.TaskListName,
 		ExecutionStartToCloseTimeout: time.Hour * 24,
 	}
+
+	// Create workflow
 	client, err := cadenceClient.CadenceClient.StartWorkflow(context.Background(), wo, order_workflow.OrderWorkFlow, orderID, customerID)
 	if err != nil {
 		fmt.Println("err: ", err)
 	}
 	spew.Dump("client:", client)
 
+	// Send StartPreparingSignal
 	time.Sleep(5 * time.Second)
 	err = cadenceClient.CadenceClient.SignalWorkflow(context.Background(), orderID, "", order_activity.StartPreparingSignal, nil)
 	if err != nil {
@@ -39,6 +42,7 @@ func main() {
 	}
 	time.Sleep(5 * time.Second)
 
+	// Send PreparingOrderSignal
 	err = cadenceClient.CadenceClient.SignalWorkflow(context.Background(), orderID, "", order_activity.PreparingOrderSignal, nil)
 	if err != nil {
 		fmt.Println("err: ", err)

@@ -1,58 +1,52 @@
-# Assing To Chef
+# How to start
 
-- Cadence/Camunda Task:
-  - Wait for `preparation.assign_to_chef` signal from tenant admin/branch admin
-- API Handler:
-  - tenant admin/branch admin will call a api to choose a chef to assign the order
-  - public message `preparation.assign_to_chef` to NATS
+1. Run docker
 
-# Notify Chef
+- `make docker_cp`
 
-- Cadence/Camunda Task:
-  - NATS req/reply to `messaging.notification.request` to the chef
+2. Register `test-domain` domain
 
-# Start preparing
+- `make domain`
 
-- Cadence/Camunda Task:
-  - Wait for `preparation.new` signal from the chef
-- API Handler:
-  - the chef will call a api to add estimate time, preparing_at time and change the status of the order
-  - public message `preparation.new` to NATS
+3. Run worker
 
-# Notify Deliver:
+- `make worker`
 
-- I don't know what you are using it for, but in my opinion we should remove it
+4. Run sample workflow
 
-# Update LCD
+- `make workflow`
 
-- Cadence/Camunda Task:
-  - Public mesage `preparation.started` to NATS
+# How it work
 
-# Set Order Is Ready
+- Order worfkow has 4 activities: `Start Preparing`, `Notify Customer`, `Update LCD`, `Preparing Order`
 
-- Cadence/Camunda Task:
-  - Wait for `preparation.ready-to-collect` signal from the chef
-- API Handler:
-  - the chef will call a api to add order_ready_at time and change the status of the order
-  - public message `preparation.ready-to-collect` to NATS
+- `Start Preparing`: wait for signal StartPreparingSignal
+- `Notify Customer`, `Update LCD`: external task
+- `Preparing Order`: wait for signal PreparingOrderSignal
 
-# Notify Runner
+- For simplicity, when you run the workflow, after 5s I will send `StartPreparingSignal` signal, and after the next 5s I will send `PreparingOrderSignal`
 
-- Cadence/Camunda Task:
-  - NATS req/reply to `messaging.notification.request` to the runner (How will we identify that runner ??)
+```go
+	// Create workflow
+	client, err := cadenceClient.CadenceClient.StartWorkflow(context.Background(), wo, order_workflow.OrderWorkFlow, orderID, customerID)
+	if err != nil {
+		fmt.Println("err: ", err)
+	}
+	spew.Dump("client:", client)
 
-# L2 Consolidate Order
+	// Send StartPreparingSignal
+	time.Sleep(5 * time.Second)
+	err = cadenceClient.CadenceClient.SignalWorkflow(context.Background(), orderID, "", order_activity.StartPreparingSignal, nil)
+	if err != nil {
+		fmt.Println("err: ", err)
+	}
+	time.Sleep(5 * time.Second)
 
-- Cadence/Camunda Task:
-  - Wait for `preparation.in-consolidation` signal from the runner
-- API Handler:
-  - the runner will call a api to add the order at consolidation table
-  - public message `preparation.in-consolidation` to NATS
+	// Send PreparingOrderSignal
+	err = cadenceClient.CadenceClient.SignalWorkflow(context.Background(), orderID, "", order_activity.PreparingOrderSignal, nil)
+	if err != nil {
+		fmt.Println("err: ", err)
+	}
+```
 
-# Put To Locker:
-
-- Cadence/Camunda Task:
-  - Wait for `preparation.in-locker` signal from the runner
-- API Handler:
-  - the runner will call a api to add in_locker time and change the status of the order
-  - public message `preparation.in-locker` to NATS
+- localhost ClientUI: http://localhost:8088/domains/test-domain/workflows?range=last-30-days

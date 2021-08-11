@@ -24,11 +24,13 @@ func OrderWorkFlow(ctx workflow.Context, orderID string, customerID string) erro
 		WaitForCancellation:    false,
 	}
 	ctx = workflow.WithActivityOptions(ctx, ao)
+
 	// Start Preparing
 	if err := order_activity.StartPreparing(ctx, orderID); err != nil {
 		return err
 	}
 	fmt.Println("==========StartPreparing=========")
+
 	// Notify customer
 	future := workflow.ExecuteActivity(ctx, order_activity.NotifyCustomer, orderID, customerID, "Start Preparing")
 	var result1 string
@@ -36,6 +38,7 @@ func OrderWorkFlow(ctx workflow.Context, orderID string, customerID string) erro
 		return err
 	}
 	fmt.Println("==========NotifyCustomer=========")
+
 	// Update lcd
 	future = workflow.ExecuteActivity(ctx, order_activity.UpdateLCD, orderID, "StartPreparing")
 	var result2 string
@@ -43,11 +46,13 @@ func OrderWorkFlow(ctx workflow.Context, orderID string, customerID string) erro
 		return err
 	}
 	fmt.Println("==========UpdateLCD=========")
+
 	// Preparing Order
 	if err := order_activity.PreparingOrder(ctx, orderID); err != nil {
 		return err
 	}
 	fmt.Println("==========PreparingOrder=========")
+
 	fmt.Println("Done")
 	return nil
 }
