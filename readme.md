@@ -20,11 +20,11 @@
 
 - Order worfkow has 4 activities: `Start Preparing`, `Notify Customer`, `Update LCD`, `Preparing Order`
 
-- `Start Preparing`: wait for signal StartPreparingSignal
+- `Start Preparing`: wait for StartPreparingSignal signal
 - `Notify Customer`, `Update LCD`: external task
-- `Preparing Order`: wait for signal PreparingOrderSignal
+- `Preparing Order`: wait for PreparingOrderSignal signal
 
-- For simplicity, when you run the workflow, after 5s I will send `StartPreparingSignal` signal, and after the next 5s I will send `PreparingOrderSignal`
+- For simplicity, when you run the workflow, after 5s I will send `StartPreparingSignal` signal, and after the next 5s I will send `PreparingOrderSignal` signal
 
 ```go
 	// Create workflow
@@ -32,7 +32,6 @@
 	if err != nil {
 		fmt.Println("err: ", err)
 	}
-	spew.Dump("client:", client)
 
 	// Send StartPreparingSignal
 	time.Sleep(5 * time.Second)
