@@ -40,9 +40,9 @@ func main() {
 	if err != nil {
 		fmt.Println("err: ", err)
 	}
-	time.Sleep(5 * time.Second)
 
 	// Send PreparingOrderSignal
+	time.Sleep(5 * time.Second)
 	err = cadenceClient.CadenceClient.SignalWorkflow(context.Background(), orderID, "", order_activity.PreparingOrderSignal, nil)
 	if err != nil {
 		fmt.Println("err: ", err)
