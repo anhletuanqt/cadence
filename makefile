@@ -13,4 +13,7 @@ nats:
 server:
 	cd server && go run *.go
 
+web:
+	cd web && yarn start
+
 .PHONY: docker_cp domain worker server nats

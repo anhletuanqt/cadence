@@ -70,6 +70,8 @@ func ListOrder(tenantID int, status string) []Order {
 			if order.Status == status {
 				orders = append(orders, order)
 			}
+		} else {
+			orders = append(orders, order)
 		}
 
 	}

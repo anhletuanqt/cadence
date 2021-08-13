@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/nats-io/nats.go"
 )
 
@@ -14,6 +15,7 @@ func main() {
 	}
 	server := NewServer(natsConn)
 	app := fiber.New()
+	app.Use(cors.New())
 	app.Post("/orders", server.CreateOrder)
 	app.Get("/orders", server.ListOrders)
 	app.Post("/orders/:id/start_preparing", server.StartPreparing)
