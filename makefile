@@ -16,4 +16,4 @@ server:
 web:
 	cd web && yarn start
 
-.PHONY: docker_cp domain worker server nats
+.PHONY: docker_cp domain worker server nats web
