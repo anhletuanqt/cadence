@@ -10,7 +10,7 @@
 
 3. Run worker
 
-- `make worker`
+- `make wk`
 
 4. Run nats
 
