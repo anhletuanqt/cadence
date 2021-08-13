@@ -26,4 +26,5 @@
 - cd web && `yarn install` to install npm packages
 - `make web`
 
-- localhost ClientUI: http://localhost:8088/domains/test-domain/workflows?range=last-30-days
+- localhost web ui: http://localhost:3001
+- localhost cadence client ui: http://localhost:8088/domains/test-domain/workflows?range=last-30-days
