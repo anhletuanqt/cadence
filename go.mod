@@ -8,6 +8,9 @@ require (
 	github.com/coreos/etcd v3.3.10+incompatible // indirect
 	github.com/coreos/go-etcd v2.0.0+incompatible // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/gofiber/fiber/v2 v2.17.0 // indirect
+	github.com/nats-io/nats.go v1.11.0 // indirect
+	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/viper v1.8.1 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/twmb/murmur3 v1.1.5 // indirect

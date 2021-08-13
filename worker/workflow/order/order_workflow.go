@@ -14,7 +14,7 @@ func init() {
 	workflow.Register(OrderWorkFlow)
 }
 
-func OrderWorkFlow(ctx workflow.Context, orderID string, customerID string) error {
+func OrderWorkFlow(ctx workflow.Context, orderID string) error {
 	ao := workflow.ActivityOptions{
 		// TaskList:               "sampleTaskList",
 		ScheduleToCloseTimeout: time.Second * 10,
@@ -32,7 +32,7 @@ func OrderWorkFlow(ctx workflow.Context, orderID string, customerID string) erro
 	fmt.Println("==========StartPreparing=========")
 
 	// Notify customer
-	future := workflow.ExecuteActivity(ctx, order_activity.NotifyCustomer, orderID, customerID, "Start Preparing")
+	future := workflow.ExecuteActivity(ctx, order_activity.NotifyCustomer, orderID)
 	var result1 string
 	if err := future.Get(ctx, &result1); err != nil {
 		return err

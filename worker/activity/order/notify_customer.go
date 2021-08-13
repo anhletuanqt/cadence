@@ -1,9 +1,9 @@
 package order_activity
 
 import (
+	"client/server/db"
 	"context"
 
-	"github.com/davecgh/go-spew/spew"
 	"go.uber.org/cadence/activity"
 )
 
@@ -11,8 +11,12 @@ func init() {
 	activity.Register(NotifyCustomer)
 }
 
-func NotifyCustomer(ctx context.Context, orderID string, customerID string, content string) (string, error) {
-	// activity.GetLogger(ctx).Info("SimpleActivity called.", zap.String("Value", value))
-	spew.Dump("NotifyCustomer: order ", orderID, "customer", customerID, "content: ", content)
+func NotifyCustomer(ctx context.Context, orderID string) (string, error) {
+	// get order
+	order := db.GetOrderByID(orderID)
+	order.Activities = append(order.Activities, "notify customer")
+	// set order
+	db.SetOrderByID(order)
+
 	return orderID, nil
 }

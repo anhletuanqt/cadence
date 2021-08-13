@@ -1,7 +1,8 @@
 package order_activity
 
 import (
-	"github.com/davecgh/go-spew/spew"
+	"client/server/db"
+
 	"go.uber.org/cadence/workflow"
 )
 
@@ -18,7 +19,11 @@ func StartPreparing(ctx workflow.Context, orderID string) error {
 		// Wait for signal
 		selector.Select(ctx)
 
-		spew.Dump("PreparingOrder: order ", orderID)
+		// get order
+		order := db.GetOrderByID(orderID)
+		order.Activities = append(order.Activities, "start preparing")
+		// set order
+		db.SetOrderByID(order)
 
 		return nil
 	}

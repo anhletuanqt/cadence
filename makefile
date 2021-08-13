@@ -4,10 +4,13 @@ docker_cp:
 domain:
 	docker run --network=host --rm ubercadence/cli:master --do test-domain domain register -rd 1
 
-worker: 
+wk: 
 	cd worker && go run worker.go
 
-workflow:
-	go run main.go
+nats: 
+	cd nats_adapter && go run main.go
 
-.PHONY: docker_cp domain worker workflow
+server:
+	cd server && go run *.go
+
+.PHONY: docker_cp domain worker server nats
