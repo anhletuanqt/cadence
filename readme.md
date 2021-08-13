@@ -12,9 +12,19 @@
 
 - `make worker`
 
-4. Run sample workflow
+4. Run nats
 
-- `make workflow`
+- make sure nats is running on your local (port: 4222)
+- `make nats`
+
+5. Run server
+
+- `make server`
+
+6. Run web
+
+- cd web && `yarn install` to install npm packages
+- `make web`
 
 # How it work
 
